@@ -1,0 +1,14 @@
+syntax = "proto3";
+package test;
+
+import "extra.proto";
+
+message Details {
+    string header = 1;
+    Body body = 2;
+    extra.Footer footer = 3;
+}
+
+message Body {
+    string content = 1;
+}

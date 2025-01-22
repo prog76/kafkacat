@@ -1,0 +1,6 @@
+{
+    "input": "Hello, World!",
+    "output_format": "json",
+    "input_format": "json",
+    "expected_output": "Hello, World!"
+}

@@ -1,0 +1,60 @@
+services:
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    command:
+      - sh
+      - -exc
+      - |
+        export KAFKA_ADVERTISED_LISTENERS=SASL://$$HOST_IP:9093
+        exec /etc/confluent/docker/run
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9093"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    ports:
+    - "9093:9093"
+    environment:
+      HOST_IP: ${HOST_IP:-kafka} # 172.18.0.1 docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}'
+      KAFKA_NODE_ID: "1"
+      KAFKA_BROKER_ID: "1"
+      CLUSTER_ID: 6PMpHYL9QkeyXRj9Nrp4KA
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: SASL://0.0.0.0:9093,BROKER://0.0.0.0:9092,CONTROLLER://0.0.0.0:9094
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_INTER_BROKER_LISTENER_NAME: SASL
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9094
+      KAFKA_DEFAULT_REPLICATION_FACTOR: "1"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: SASL:SASL_PLAINTEXT,BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_LISTENER_NAME_SASL_SASL_ENABLED_MECHANISMS: PLAIN
+      KAFKA_LISTENER_NAME_SASL_PLAIN_SASL_JAAS_CONFIG: >
+        org.apache.kafka.common.security.plain.PlainLoginModule required username='admin' password='admin' user_test='pass';
+
+
+  producer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: /bin/sh
+    volumes:
+    - ./testdata:/testdata
+    command:
+    - -c
+    - |
+      cat /testdata/input_json_key | python /app/kafkacat.py --mode=producer --input-format=json_key --output-format=protobuf_binary --proto-files /testdata/main.proto /testdata/details.proto /testdata/extra.proto --brokers=kafka:9093 --verbose --topic=my-topic --credentials sasl.mechanisms=PLAIN security.protocol=SASL_PLAINTEXT sasl.username=test sasl.password=pass
+
+
+  consumer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+    - producer
+    volumes:
+    - ./testdata:/testdata
+    command: [--mode=consumer, -b=kafka:9093, --verbose, --decorate=json, --output-format=json, -t=my-topic,   --input-format=protobuf_binary, "--key=test.Main,test.Details", --proto-files, /testdata/main.proto, /testdata/details.proto,  --credentials, sasl.mechanisms=PLAIN, security.protocol=SASL_PLAINTEXT, sasl.username=test, sasl.password=pass]

@@ -1,0 +1,9 @@
+{
+    "input": "{\"content\": \"Hello, World!\"}",
+    "input_format": "json",
+    "output_format": "protobuf_binary",
+    "proto_files": [
+        "testdata/main.proto"
+    ],
+    "expected_output": "\\n\\rHello, World!"
+}

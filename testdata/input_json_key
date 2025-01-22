@@ -1,0 +1,4 @@
+{"key": "test.Main", "msg": "{\"content\": \"Hello\", \"details\": {\"header\": \"Header\", \"body\": {\"content\": \"Body Content\"}, \"footer\": {\"subcontent\": \"SubContent\"}}}" }
+{"key": "test.Details", "msg": "{\"header\": \"Header\", \"body\": {\"content\": \"Body Content\"}, \"footer\": {\"subcontent\": \"SubContent\"}}" }
+{"key": "test.Body", "msg": "{\"content\": \"Body Content\"}" }
+{"key": "extra.Footer", "msg": "{\"subcontent\": \"SubContent\"}" }

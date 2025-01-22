@@ -1,0 +1,50 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Kafka Producer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/kafkacat.py",
+
+            "args": [
+                "--mode=producer",
+                "--brokers=localhost:9093",
+                "--verbose",
+                "--topic=my-topic",
+                "--key=test",
+                "--input-format=json_key",
+                "--credentials",
+                "sasl.mechanisms=PLAIN", "security.protocol=SASL_PLAINTEXT", "sasl.username=test", "sasl.password=pass",
+                "<",
+                "${workspaceFolder}/testdata/input_json_key"
+            ],
+            "preLaunchTask": "Start Kafka",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Kafka Consumer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/kafkacat.py",
+            "args": [
+                "--mode=consumer",
+                "-b=localhost:9093",
+                "--verbose",
+                "-t=my-topic",
+                "--output-format=json_key",
+                "--credentials",
+                "sasl.mechanisms=PLAIN", "security.protocol=SASL_PLAINTEXT", "sasl.username=test", "sasl.password=pass"
+            ],
+            "preLaunchTask": "Start Kafka",
+            "console": "integratedTerminal"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug Both: Producer & Consumer",
+            "configurations": ["Kafka Producer", "Kafka Consumer"],
+            "stopAll": true,
+        }
+    ]
+}

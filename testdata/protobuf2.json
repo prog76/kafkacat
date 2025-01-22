@@ -1,0 +1,11 @@
+{
+    "input": "\\n\\fMain Content\\u0012*\\n\\u0006Header\\u0012\\u000e\\n\\fBody Content\\u001a\\u0010\\n\\u000eFooter Content",
+    "input_format": "protobuf_binary",
+    "output_format": "json",
+    "proto_files": [
+        "testdata/main.proto",
+        "testdata/details.proto",
+        "testdata/extra.proto"
+    ],
+    "expected_output": "{\"content\": \"Main Content\", \"details\": {\"header\": \"Header\", \"body\": {\"content\": \"Body Content\"}, \"footer\": {\"subcontent\": \"Footer Content\"}}}"
+}

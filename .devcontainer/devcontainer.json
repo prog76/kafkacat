@@ -1,0 +1,22 @@
+{
+    "name": "Python Kafka Extractor",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+
+    "settings": {},
+    "features": {
+		  "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	  },
+    "mounts": [
+		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh,readonly"
+	],
+
+    "extensions": [
+      "ms-vscode-remote.remote-wsl"
+    ],
+
+    "forwardPorts": [],
+
+    "postCreateCommand": "pip install -r requirements.txt"
+  }

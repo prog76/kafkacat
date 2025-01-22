@@ -1,0 +1,6 @@
+syntax = "proto3";
+package extra;
+
+message Footer {
+    string subcontent = 1;
+}

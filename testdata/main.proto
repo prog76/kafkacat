@@ -1,0 +1,9 @@
+syntax = "proto3";
+package test;
+
+import "details.proto";
+
+message Main {
+    string content = 1;
+    Details details = 2;
+}

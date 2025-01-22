@@ -1,0 +1,11 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Kafka",
+            "type": "shell",
+            "command": "HOST_IP=$(docker network inspect bridge -f '{{range .IPAM.Config}}{{.Gateway}}{{end}}') docker-compose up -d --wait kafka",
+            "problemMatcher": [],
+        },
+    ]
+}
